@@ -1,5 +1,6 @@
 import telebot
 import requests
+import g4f.client
 from bs4 import BeautifulSoup
 
 OWM_API_KEY = "000be634412f078ad203b00957e74c50"
@@ -70,5 +71,24 @@ def handle_crypto_request(message):
     else:
         bot.send_message(message.chat.id, f"К сожалению, на данный момент невозможно получить цену на {crypto.upper()}.")
 
+@bot.message_handler(commands=['image'])
+def generate_image(message):
+    if message.text.startswith('/image'):
+        search_query = message.text.split("/image ", 1)[1]
+        if search_query:
+            client = g4f.client.Client()
+            response = client.images.generate(
+                model="g4f.Provider.Bing",
+                prompt=search_query
+            )
+            if response.data:
+                image_url = response.data[0].url
+                bot.send_photo(message.chat.id, image_url)
+            else:
+                bot.send_message(message.chat.id, "Изображение не найдено")
+        else:
+            bot.send_message(message.chat.id, "Вы не указали текст для создания изображения")
+    else:
+        bot.send_message(message.chat.id, "Используйте команду /image для запроса создания изображения")
 
 bot.polling()
