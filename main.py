@@ -8,7 +8,8 @@ bot = telebot.TeleBot('7101899787:AAE0u5KhTl2Irool9X5LW4ZXkrNF1zLrrQE')
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot.send_message(message.chat.id, "Привет, я бот показываюший информация о погоде в городах,просто напиши свой после команды /search  ")
+    bot.send_message(message.chat.id, "Привет, я универсальный бот для поиска погоды в городе просто укажите название города после команды /search\n
+            и создание изображение  чернз команду /image *просто здесь пишите что вам нужно*")
 
 @bot.message_handler(commands=['search'])
 def get_weather(message):
