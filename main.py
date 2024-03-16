@@ -8,8 +8,7 @@ bot = telebot.TeleBot('7101899787:AAE0u5KhTl2Irool9X5LW4ZXkrNF1zLrrQE')
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    bot.send_message(message.chat.id, "Привет, я универсальный бот для поиска погоды в городе просто укажите название города после команды /search\n
-            и создание изображение  чернз команду /image *просто здесь пишите что вам нужно*")
+    bot.send_message(message.chat.id, "Привет, я бот показываюший информация о погоде в городах,просто напиши свой после команды /search  ")
 
 @bot.message_handler(commands=['search'])
 def get_weather(message):
@@ -78,15 +77,18 @@ def generate_image(message):
         search_query = message.text.split("/image ", 1)[1]
         if search_query:
             client = g4f.client.Client()
-            response = client.images.generate(
-                model="g4f.Provider.Bing",
-                prompt=search_query
-            )
-            if response.data:
-                image_url = response.data[0].url
-                bot.send_photo(message.chat.id, image_url)
-            else:
-                bot.send_message(message.chat.id, "Изображение не найдено")
+            try:
+                response = client.images.generate(
+                    model="g4f.Provider.Bing",
+                    prompt=search_query
+                )
+                if response.data:
+                    image_url = response.data[0].url
+                    bot.send_photo(message.chat.id, image_url)
+                else:
+                    bot.send_message(message.chat.id, "Изображение не найдено")
+            except Exception as e:
+                bot.send_message(message.chat.id, f"Произошла ошибка при создании изображения: {e}")
         else:
             bot.send_message(message.chat.id, "Вы не указали текст для создания изображения")
     else:
